@@ -1,0 +1,58 @@
+Você acaba de ser contratado por uma big tech company dos EUA (finalmente todo aquele esforço na UFABC foi recompensado💰). Essa big tech company é uma grande empresa de e-commerce e vende praticamente de tudo. Por causa disso, ela possui enormes armazéns cheios de produtos. Como é de se esperar de big tech companies, tudo é otimizado e usa-se tecnologia para automatizar quase tudo. Então, não é de se estranhar que, ao invés de funcionários, essa empresa tenha robôs autônomos para carregar as mercadorias dentro dos armazéns.
+
+Os armazéns, como você deve imaginar, são repletos de prateleiras enormes separadas por corredores. Cada robô carrega em sua memória uma lista com todos os corredores do armazém no qual trabalha, além dos comprimentos destes. Além disso, cada robô conhece o ponto de entrada e saída de cada corredor – como alguns corredores dos armazéns são muito estreitos, esses corredores funcionam como vias de mão única nas quais os robôs só podem trafegar em um sentido. Assim, um robô só pode entrar e sair de um corredor, respectivamente, pelo ponto de entrada e saída deste.
+
+Sua primeira tarefa é reescrever o programa que o robô usa para calcular a menor rota entre dois pontos dentro do armazém.
+
+Critérios importantes
+Independentemente dos resultados dos testes, o não cumprimento dos critérios abaixo implicará em nota zero para esta atividade. Qualquer dúvida, entre em contato.
+
+As únicas estruturas de dados que você poderá usar da biblioteca padrão são: vetores/matrizes (estáticos e/ou dinâmicos), listas, pilhas, strings, hashs/dicionários/maps.
+Se você precisar, você pode usar uma rotina de ordenação fornecida pela sua linguagem.
+Se você precisar usar uma fila de prioridades, então você deverá implementar a sua própria fila.
+O tempo de execução do seu algoritmo deve ser O((n + m) lg n), onde n é o número de pontos e m é o número de corredores.
+Entrada
+A entrada para o seu programa consiste da lista de corredores do armazém no qual um dado robô trabalha, do ponto atual do robô (sua origem) e o ponto no qual o robô deve ir (seu destino). Mais especificamente, a primeira linha da entrada consiste de um inteiro n, 1 <= n <= 100000, que representa o número de pontos de entrada/saída. A segunda linha da entrada consiste de um inteiro m, 0 <= m <= n (n - 1), que representa o número de corredores do armazém. Cada uma das próximas m linhas consiste de três números x y w, onde x e y são inteiros tais que 0 <= x, y < n e w é um número real tal que 0 <= w <= 999, representando um corredor com ponto de entrada em x, ponto de saída em y e comprimento w. Por fim, temos uma linha contendo dois inteiros o d, 0 <= o, d < n, onde o é o ponto de origem do robô e d o ponto de destino.
+
+Saída
+A saída do seu programa deve consistir de um único número (com quatro casas decimais de precisão) representando o comprimento do menor trajeto do ponto de origem o ao ponto de destino d, se tal trajeto existir. Acontece que as vezes a memória de um robô se corrompe, fazendo com que ele se “esqueça” de alguns corredores. Afinal, os grandes engenheiros da Ama dessa grande empresa não projetariam as vias de um armazém de forma que fosse impossível para um robô ir de um ponto o a um ponto d. Assim, caso não haja um trajeto do ponto o ao ponto d, o seu programa deve imprimir a mensagem “ERRO: 3.1415”.
+
+Exemplos
+Teste 01
+
+Entrada:
+
+5
+9
+0 3 9.0690
+0 4 29.0608
+1 2 0.5465
+2 1 75.4759
+2 4 0.2178
+3 1 58.2781
+3 2 0.5346
+3 4 987.8134
+4 0 0.4844
+2 1
+Saída:
+
+68.0493
+Teste 02
+
+Entrada:
+
+5
+9
+0 3 0.5429
+0 4 16.2579
+2 0 2.3740
+2 3 0.9571
+3 1 428.1844
+3 4 0.3195
+4 0 5.8892
+4 1 0.2138
+4 3 448.0224
+2 0
+Saída:
+
+2.3740

@@ -1,0 +1,82 @@
+Descrição
+Estamos em gerra e você acaba de ser recrutado(a) para o exército brasileiro. Inicialmente você foi alocado para a linha de frente, mas devido aos seus conhecimentos de programação, acabou sendo realocado para o setor de inteligência.
+
+Em uma ação espetacular de espionagem (provavelmente essa história vai virar filme), o exército brasileiro conseguiu um mapa detalhado da malha ferroviária do inimigo. Esta malha ferroviária é muito importante para o inimigo, está sendo usada para transportar armamento, munição e suprimentos para os fronts de batalha.
+
+Agora, de posse desse mapa, o plano é danificar, mesmo que um pouco, essa infraestrutura. O plano é ousado: a ideia é fazer um ataque furtivo, penetrando o espaço aéreo inimigo, com um bombardeiro B-52 escoltado por alguns caças, bombardear destruindo um terminal ferroviário, e retornar para o espaço aéreo brasileiro o mais rápido possível (antes que o inimigo perceba a violação do seu espaço aéreo e envie reforços). Por ser um ataque relâmpago, o alvo precisa ser bem escolhido para causar o maior dano possível.
+
+Cada ferrovia liga apenas dois terminais, os destinos da ferrovia. Entretanto, cada terminal pode ser destino de mais de uma ferrovia, o que torna possível a baldeação entre ferrovias com destino naquele terminal. Assim, por causa da baldeação, é possível enviar um carga de um terminal X para um terminal Y, mesmo que não exista uma ferrovia com destinos em X e Y.
+
+Ao destruir um terminal ferroviário, não é mais possível enviar/receber suprimentos daquele terminal e, consequentemente, da região que ele abastece. Afinal, do que adianta receber um carregamento de combustível se você não tem a infraestrutura do terminal pra armazenar a carga?! Ademais, como o terminal é necessário para fazer a baldeação entre ferrovias, você pode assumir que se um terminal for destruído, não é mais possível fazer baldeação entre ferrovias naquele terminal.
+
+Uma boa malha ferroviária permite enviar um carregamento entre qualquer par de terminais. Ademais, ela possui um certo nível de redundância, por exemplo, mesmo que uma determinada ferrovia esteja fechada, por causa de uma manutenção ou problema, você ainda assim gostaria que a malha permitisse enviar o carregamento entre qualquer par de terminais (talvez, agora, fazendo a baldeação por terminais diferentes). Claro que esses objetivos nem sempre são atingidos, pois criar um nova ferrovia é algo muito caro. Mas essas são características desejáveis.
+
+Pensando nessas características, percebeu-se que alguns terminais são alvos mais interessantes do que outros. Pois, além de deixar de atender a sua região, a destruição de um terminal impacta na “conectividade” da malha ferrovia. Dizemos que dois terminais X e Y estão conectados se é possível enviar cargas entre os terminais X e Y. Assim, o exército estipulou que um terminal é um possível alvo se a sua destruição causa a desconexão de pelo menos dois terminais (ou seja, pelo menos dois terminais deixam de ser conectados).
+
+Sua missão é desenvolver um programa que, dada a rede inimiga, identifique os possíveis alvos para um ataque.
+
+Restrições
+Importante: caso o seu programa viole uma das condições abaixo, ele será desconsiderado. Qualquer dúvida, entre em contato.
+
+Você deve implementar o grafo usando listas de adjacências
+A sua solução deve rodar em O(n + m), onde n é o número de terminais e m o número de ferrovias. Isso significa que eliminar um terminal e verificar a malha ferroviária resultante não é uma solução suficientemente eficiente (por quê?).
+Entrada
+A primeira linha da entrada contém um inteiro n, com 1 <= n <= 1000, que representa o número de terminais da malha ferroviária inimiga. A segunda linha da entrada contém um inteiro m, com 0 <= m <= 999999, que contém o número de ferrovias da malha do inimigo. As próximas m linhas consistem de dois inteiros x y, com 0 <= x, y <= n - 1, separados por espaço, representando que há um ferrovia ligando os terminais x e y.
+
+Saída
+A primeira linha da saída do seu programa deve consistir da frase # de alvos possiveis: N, onde N deve ser substituído pelo número de possíveis alvos identificados. Cada uma das próximas N linhas deve consistir de um único inteiro u que representa um possível terminal alvo. Ademais, se u e v são terminais alvo, com u < v, então você deve listar o alvo u antes do v na saída do seu programa.
+
+Exemplos
+Teste 01
+
+Entrada:
+
+5
+5
+0 1
+0 2
+1 3
+2 3
+3 4
+Saída:
+
+# de alvos possiveis: 1
+3
+Teste 02
+
+Entrada:
+
+8
+8
+0 2
+0 4
+0 5
+0 7
+2 4
+1 3
+5 7
+5 6
+Saída:
+
+# de alvos possiveis: 2
+0
+5
+Teste 03
+
+Entrada:
+
+9
+8
+0 3
+0 5
+1 4
+1 6
+1 7
+1 8
+2 7
+3 5
+Saída:
+
+# de alvos possiveis: 2
+1
+7

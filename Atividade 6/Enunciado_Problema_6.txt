@@ -1,0 +1,156 @@
+O make é um utilitário que determina automaticamente quais módulos de um programa precisam ser recompilados, e dispara instruções para recompilá-los. Para usar o make, você precisa escrever um arquivo chamado makefile que descreve as relações entre os arquivos do seu programa e declara as instruções que devem ser executadas para atualizar cada arquivo.
+
+Uma vez que um arquivo makefile tenha sido escrito de forma adequada para o seu programa, toda vez que houver uma mudança no código fonte e que se deseje gerar um novo executável, basta digitar o comando make no terminal. O make irá ler o arquivo makefile do seu programa e se encarregará de recompilar apenas as partes necessárias para gerar um novo executável, o que pode reduzir consideravelmente o tempo de compilação, principalmente quando aplicado a projetos grandes como o Firefox ou o Kernel do Linux.
+
+Um makefile consiste de regras com o seguinte formato:
+
+ALVO: DEPENDÊNCIA1 DEPENDÊNCIA2 ...
+    INSTRUÇÃO1
+    INSTRUÇÃO2
+    ...
+    ...
+Um ALVO é geralmente o nome de um arquivo que é gerado pela regra, por exemplo, um arquivo executável ou um objeto. Uma DEPENDÊNCIA é geralmente um arquivo de entrada que é necessário para criar o ALVO. Geralmente, um ALVO depende de vários arquivos. INSTRUÇÃO é uma ação/instrução que o make deve executar. Geralmente, uma regra possui várias instruções. Todas as linhas contendo instruções devem começar com um caractere de TAB.
+
+No exemplo abaixo, podemos ver um makefile que compila um pequeno programa em C que computa uma árvore geradora mínima.
+
+mst_matrix: main.o prim.o wgraph.o lib_heap.a
+    @echo "Executando instruções de mst_matrix"
+    gcc -o mst_matrix main.o prim.o wgraph.o heap.o  -L. -l_heap
+    
+main.o: main.c
+    @echo "Executando instruções de main.o"
+    gcc -c main.c
+
+prim.o: mst.h prim.c 
+    @echo "Executando instruções de prim.o"
+    gcc -c prim.c
+
+wgraph.o: wgraph.h wgraph.c
+    @echo "Executando instruções de wgraph.o"
+    gcc -c wgraph.c
+    
+heap.o: priority_queue.h heap.c
+    @echo "Executando instruções de heap.o"
+    gcc -c heap.c
+    
+lib_heap.a: heap.o
+    @echo "Executando instruções de lib_heap.a"
+    ar rcs lib_heap.a heap.o
+    
+clean: 
+    @echo "Limpando o Projeto"
+    rm -rf *.o mst_matrix
+Vejamos então um pequeno exemplo de execução do make quando este processar o makefile acima. Digamos que o usuário invocou o make com o seguinte comando:
+
+$ make main.o
+Vamos primeiro supor que estamos trabalhando com um /clean build/, i.e., que nunca tenhamos compilado esse projeto antes. No comando acima, o usuário pede para o make executar a regra main.o (vamos nos referir a regra cujo alvo é xxx simplesmente por xxx). O make então verificará se alguma dependência dessa regra (neste caso, apenas main.c) foi atualizada desde a última compilação. No caso, esse projeto nunca foi compilado antes, então a regra está “desatualizada”. Portanto, ao executar o comando acima o make executará as instruções da regra.
+
+@echo "Gerando o objeto do arquivo principal"
+gcc -c main.c
+Agora, imagine que o usuário invocou o comando abaixo novamente:
+
+$ make main.o
+O make então verificará se alguma dependência dessa regra (main.c) foi atualizada desde a última compilação. Digamos que não tenha havido nenhuma edição ao arquivo main.c. Então nesse caso, o make não executará nenhuma instrução, pois ele sabe que o artefato gerado pela execução dessa regra (o arquivo main.o) é um arquivo que foi construído com a versão mais recente dos arquivos dependentes. Agora, imagine novamente que usuário modificou o arquivo main.c e invocou o comando acima novamente. Agora, o make percebe que a dependência da regra main.o foi atualizada e portanto que o objeto main.o foi construído com uma versão velha do arquivo main.c e que portanto precisa atualizar o arquivo main.o e para isso ele executa as instruções da regra main.o. Nesse caso ele executará os comandos da regra main.o, atualizando o arquivo objeto main.o:
+
+@echo "Executando instruções de main.o"
+gcc -c main.c
+Neste exercício, vamos fazer uma versão simplificado do make em que assumimos que todas as regras estão desatualizadas, ou seja, faremos a execução do make com um /clean build/. Entretanto note que não seria difícil estender a nossa versão para a versão mais robusta do make. Para isso, bastaria que comparássemos as datas de modificação dos arquivos de dependência com as datas desses arquivos no momento da última execução da regra. Se todas as datas permanecem iguais, então o arquivo gerado pela execução da regra permanece atualizado; caso contrário, o arquivo resultante da execução da regra foi construído com arquivos desatualizados e portanto as instruções da regra devem ser executadas novamente.
+
+Como comentado anteriormente, vamos sempre assumir que as regras estão desatualizadas. Agora, vamos ver como seria a execução do comando abaixo com essa hipótese.
+
+make mst_matrix
+Antes de executar as instruções dessa regra, precisamos executar as instruções das dependências, se estas forem alvos de regras. No caso de uma dependência que não é alvo de uma regra, ou seja, uma dependência que é um arquivo que não é gerado pelo processo de compilação, não há regra para ser executada e então não precisamos fazer nada. No caso da regra mst_matrix, as quatro dependências (main.o, prim.o, wgraph.o, lib_heap.a) são alvos de regras, então precisamos executar as instruções delas. Note que as regras main.o, prim.o e wgraph.o só possuem dependências que não são alvos de outras regras, então podemos executar as instruções dessas regras sem ter que nos preocupar em colocá-las após as instruções de outras regras. Entretanto, a regra lib_heap.a possui uma dependência que é alvo de uma regra: heap.o. Isso significa que antes de executar as instruções de lib_heap.a, precisamos executar as instruções de heap.o. Por sua vez, a regra heap.o só possui dependências que não são alvos de regras, então podemos executar as instruções da regra heap.o livremente. Assim, uma das possíveis execuções válidas do make seria:
+
+@echo "Executando instruções de main.o"
+gcc -c main.c
+@echo "Executando instruções de prim.o"
+gcc -c prim.c
+@echo "Executando instruções de wgraph.o"
+gcc -c wgraph.c
+@echo "Executando instruções de heap.o"
+gcc -c heap.c
+@echo "Executando instruções de lib_heap.a"
+ar rcs lib_heap.a heap.o
+@echo "Executando instruções de mst_matrix"
+gcc -o mst_matrix main.o prim.o wgraph.o heap.o  -L. -l_heap
+Note como as instruções de heap.o precedem as instruções de lib_heap.a, já que heap.o é uma dependência da regra lib_heap.a. Note também como as instruções de lib_heap.a, main.o, prim.o, wgraph.o precedem as instruções de mst_matrix, já que aquelas são dependências desta. Por fim, abaixo podemos ver uma outra execução possível de ser realizada pelo make.
+
+@echo "Executando instruções de main.o"
+gcc -c main.c
+@echo "Executando instruções de heap.o"
+gcc -c heap.c
+@echo "Executando instruções de prim.o"
+gcc -c prim.c
+@echo "Executando instruções de lib_heap.a"
+ar rcs lib_heap.a heap.o
+@echo "Executando instruções de wgraph.o"
+gcc -c wgraph.c
+@echo "Executando instruções de mst_matrix"
+gcc -o mst_matrix main.o prim.o wgraph.o heap.o  -L. -l_heap
+Por fim, cabe observar que as dependências de uma regra não são necessariamente todas alvos de regras ou todas não alvos de regras, como no exemplo acima. Uma regra pode conter algumas dependências que são alvos de regras e outras que não são, embora isso não seja muito comum na prática.
+
+Critérios importantes
+Independentemente dos resultados dos testes, o não cumprimento dos critérios abaixo implicará em nota zero para esta atividade. Qualquer dúvida, entre em contato.
+
+Você deve usar algum algoritmo visto em aula para resolver o problema. Soluções por força bruta (testar todas as permutações, por exemplo) serão desconsideradas mesmo que passem em todos os testes.
+As únicas estruturas de dados que você poderá usar da biblioteca padrão são: vetores/matrizes (estáticos e/ou dinâmicos), listas, pilhas, strings, hashs/dicionários/maps.
+Se você precisar, você pode usar uma rotina de ordenação fornecida pela sua linguagem.
+🚨 Aqui ná página HTML do moodle, no lugar de um caracter TAB, está aparecendo 4 espaços. Aqui, na página, eu não consigo forçar esse caracter TAB, nos casos de teste todas as linhas com instruções começam com TAB e não com 4 espaços. Se você copiar os exemplos aqui da página HTML para usar como caso de teste para testar o seu programa, lembre-se de trocar os espaços por caracteres TAB no início das intruções.
+Dicas para quem decidir fazer o Problema em C
+As funções fgets (stdio.h) e strtok (string.h) podem ser úteis.
+Se você precisar implementar uma tabela de símbolos, você pode usar a estrutura de dados que você achar mais fácil (vetor estático, lista ligada, tabela hash, árvore).
+Talvez você queira alocar um vetor estático com tamanho suficiente para armazenar as instruções de qualquer instância possível (para não ter que programar uma lista ligada).
+Entrada
+A primeira linha da entrada contém uma cadeia make <alvo>, onde <alvo> é o nome de um dos alvos do arquivo makefile. As próximas linhas contêm o conteúdo do arquivo makefile. O fim da entrada é marcado por uma linha com a frase FIM. Você pode assumir que não há linhas em branco na entrada, que cada caso de teste contém no máximo 500 regras e que, ao todo, cada caso de teste tem no máximo 1000 instruções. Ademais, você pode assumir que cada instrução tem no máximo 200 caracteres.
+
+Saída
+A saída do seu programa deve consistir na sequência de instruções que devem ser executadas pelo make para que a regra <alvo> seja executada. Vamos nos referir a uma regra foo se o alvo desse regra é foo. Note que se uma regra bar é um pré-requisito de uma regra foo, então as instruções da regra bar devem ser executadas antes das instruções da regra foo. Ademais, as instruções dentro de uma regra não podem ter suas ordens alteradas.
+
+Exemplos
+Teste 01
+
+Entrada:
+
+make all
+all: graph.o main.o
+    @echo "construindo o programa principal"
+    gcc -o main graph.o main.o
+graph.o: graph.c graph.h
+    gcc -c graph.c
+main.o: main.c
+    gcc -c main.c
+clean:
+    rm *.o
+FIM
+Saída:
+
+gcc -c graph.c
+gcc -c main.c
+@echo "construindo o programa principal"
+gcc -o main graph.o main.o
+Teste 02
+
+Entrada:
+
+make all
+out_dir: clean
+    mkdir out_dir
+img_dir: out_dir
+    mkdir out_dir/figs
+all: img_dir clean
+    pdflatex --out-dir outdir main.tex
+    bibtex main
+    pdflatex main.tex
+    pdflatex main.tex
+clean:
+    rm -f out_dir
+FIM
+Saída:
+
+rm -f out_dir
+mkdir out_dir
+mkdir out_dir/figs
+pdflatex --out-dir outdir main.tex
+bibtex main
+pdflatex main.tex
+pdflatex main.tex

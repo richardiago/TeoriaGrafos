@@ -1,0 +1,58 @@
+Descrição
+Marvin quer dar um churrasco pra comemorar o fim da pandemia. Ele sabe que para o churrasco ser ÉPICO todos os participantes precisam se conhecerem, senão o churrasco fica chato, dividido em panelinhas. Marvin está montando a lista de convidado e pra saber quem conhece quem entre os seus amigos, Marvin decidiu usar o Haiku, uma nova rede social que todo mundo que é descolado conhece (você conhecia?). Assim, se o amigos x e y do Marvin são amigos no Haiku, então o Marvin assume que ambos se conhecem, o que permite que Marvin possa convidar ambos para o churrasco ÉPICO. Se eles não são amigos no Haiku, então Marvin assume que o mais seguro é assumir que eles não se conhecem e, consequentemente, Marvin pode convidar no máximo um dele. Marvin criou algumas listas de convidados possíveis, uma com o pessoal da academia, outra com um pessoal do conheceu no trabalho, outra com algumas pessoas do clube, e por aí vai.. Agora ele está verificando quais dessas possíveis listas de convidados são viáveis para o churrasco ÉPICO. O problema é que isso está tomando muito tempo, pois Marvin é muito popular e suas listas de convidados são grandes.
+
+Como o Marvin sabe que você faz computação na UFABC, ele pediu a sua ajuda para desenvolver um programa que, dada uma possível lista de convidados, decida se o uma dada lista de convidados é viável para um churrasco ÉPICO ou não.
+
+Entrada
+A primeira linha da entrada contém um inteiro n, com 1 <= n <= 100, que denota o número total de amigos do Marvin na Haiku. A segunda linha da entrada contém um inteiro m, com 0 <= m <= 10000. As próximas m linhas consistem de dois inteiros x y, com 0 <= x, y <= n - 1, separados por espaço, que denotam que o amigos x e y do Marvin são amigos no Haiku. A próxima linha consiste de um inteiro k, com 1 <= k <= 1000. As próximas k linhas consistem de um inteiro l, seguidos de l inteiros x1, x2, …, xl, com 0 <= x1, x2, ... , xl < n, todos separados por espaços. Cada uma dessas k linhas representa uma possível lista de convidados para o churrasco ÉPICO, onde x1, x2, … xl denotam os convidados da configuração.
+
+Saída
+A saída do seu programa deve consistir de k linhas, onde a i-ésima linha deve contar a palavra SIM, se a i-ésima configuração de entrada dá um churrasco ÉPICO, e NAO, caso contrário.
+
+Exemplos
+Teste 01
+
+Entrada:
+
+6
+6
+0 1
+0 4
+5 3
+3 2
+2 1
+1 3
+3
+3 0 1 3
+3 1 2 3
+2 4 3
+Saída:
+
+NAO
+SIM
+NAO
+Teste 02
+
+Entrada:
+
+6
+8
+0 4
+4 1
+4 2
+4 3
+4 5
+5 1
+1 2
+5 2
+4
+4 1 5 4 2
+1 0
+3 5 4 0
+3 0 3 2
+Saída:
+
+SIM
+SIM
+NAO
+NAO
